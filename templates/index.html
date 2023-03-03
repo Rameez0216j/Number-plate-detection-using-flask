@@ -27,9 +27,15 @@
                 <input type="text" id="first_name"
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 text-center"
                       placeholder="" readonly value="{{data.text}}">
-
+                      
             </div>
+            
+            <!-- {{data.res}} -->
+            
         </form>
     </div>
+    {% if data.res %}
+        <img class="rounded-md m-3 mt-5 h-[150px] mx-auto self-center border-2 border-[white]" src="../static/Images/car.jpg" alt="car">
+    {% endif %}
 </div>
 {% endblock content %}

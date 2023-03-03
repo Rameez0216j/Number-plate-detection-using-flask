@@ -9,8 +9,8 @@ from matplotlib import pyplot as plt
 import numpy as np
 import imutils
 import easyocr
+import os
 
-from flask import session
 
 UPLOAD_FOLDER = './uploads'
 app=Flask(__name__, template_folder='./templates', static_folder='./static')
@@ -19,6 +19,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SECRET_KEY'] = 'mlappisrunninghere'
 
+file_path ="D:\\codes\\WEB_DESIGNING\\Projects\\All_Projects\\Number_plate_detection\\static\\Images\\car.jpg"
 
 # reg_model=pickle.load(open("diabities_log_reg.pkl",'rb'))
 # scaler=pickle.load(open("Scaler.pkl",'rb'))
@@ -26,7 +27,7 @@ app.config['SECRET_KEY'] = 'mlappisrunninghere'
 
 @app.route("/",methods=['GET', 'POST'])
 def index():
-    data={"text":"------"}
+    data={"text":"------","res":False}
     if request.method == "POST":
         try:
             file = request.files['image'].read()
@@ -38,7 +39,7 @@ def index():
             # print("Hello")
             bfilter = cv.bilateralFilter(gray, 11, 17, 17) #Noise reduction
             edged = cv.Canny(bfilter, 30, 200) #Edge detection
-            plt.imshow(cv.cvtColor(edged, cv.COLOR_BGR2RGB))
+            # plt.imshow(cv.cvtColor(edged, cv.COLOR_BGR2RGB))
             keypoints = cv.findContours(edged.copy(), cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
             contours = imutils.grab_contours(keypoints)
             contours = imutils.grab_contours(keypoints)
@@ -63,9 +64,33 @@ def index():
             reader = easyocr.Reader(['en'])
             result = reader.readtext(cropped_image)
 
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+                print("File has been deleted")
+            else:
+                print("File does not exist")
+
+            # text = result[0][-2]
+            # font = cv.FONT_HERSHEY_SIMPLEX
+
+            # print(text)
             text = result[0][-2]
             font = cv.FONT_HERSHEY_SIMPLEX
-            data={"text":text}
+            print(text)
+            res = cv.putText(img, text=text, org=(approx[0][0][0], approx[1][0][1]+60), fontFace=font, fontScale=1, color=(0,255,0), thickness=2, lineType=cv.LINE_AA)
+            print("last")
+            res = cv.rectangle(img, tuple(approx[0][0]), tuple(approx[2][0]), (0,255,0),3)
+            print("last")
+            res=cv.cvtColor(res, cv.COLOR_BGR2RGB)
+            print("last")
+            cv.imwrite(file_path, res)
+            print("last")
+            result=cv.imread(file_path)
+            print("last")
+            # cv.imshow(result)
+            print("last")
+
+            data={"text":text,"res":True}
             render_template("index.html",data=data)
         except:
             return render_template("Error_page.html")
