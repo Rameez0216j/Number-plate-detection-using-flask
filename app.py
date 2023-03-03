@@ -19,6 +19,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SECRET_KEY'] = 'mlappisrunninghere'
 
+# NOTE : Below path should be given for current location static//image folder for the app to work
 file_path ="D:\\codes\\WEB_DESIGNING\\Projects\\All_Projects\\Number_plate_detection\\static\\Images\\car.jpg"
 
 # reg_model=pickle.load(open("diabities_log_reg.pkl",'rb'))
